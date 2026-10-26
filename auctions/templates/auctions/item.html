@@ -1,0 +1,66 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% block body %}
+    {% if message %}
+        <div class="alert theme-danger" role="alert">{{ message }}</div>
+    {% endif %}
+    {% if item.closed and bid %}
+    <h4 class="alert theme-info" role="alert">This item was won by {{ bid.bidder  }} </h4>
+    {% elif item.closed %}
+    <h4 class="alert theme-info" role="alert">This auction was closed</h4>
+    {% endif %}
+    <div class="box">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ item.id }}">
+            {% if item.id in watchlist %}
+            <input type="submit" name="act" value="Remove from watchlist">
+               
+            {% else %}
+                 <input type="submit" name="act" value="Add to watchlist">
+            {% endif %}
+            {% if not item.closed and item.user == request.user %}
+            <input type="submit" value="Close auction" name="act">
+            {% endif %}
+
+            
+
+        </form>
+        <h1>Listing: {{ item.listing }} </h1>
+        <img height="500" src="{% static 'uploads/'|add:item.photo.url %}" alt="item photo">
+        <p>{{ item.description }} </p>
+        <h1>${{ item.starting_bid }} </h1>
+    </div>
+    {% if not item.closed %}
+    <div class="bids">
+        {% if bid %}
+        <p>{{ bid.bid_number }} bid(s) so far, the current bid is from {{ bid.bidder }} </p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" name="act" value="Place Bid">
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="detail">
+        <p>Category: {{ item.category }} </p>
+        <p>Listed by: {{ item.user }} </p>
+    </div>
+
+
+    <div class="comments">
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form }}
+            <input type="submit" name="act" value="Add Comment">
+        </form>
+        <div class="all_comments">
+            {% for commentx in comments %}
+            <p>{{ commentx.commenter }}: {{ commentx.comment }} </p>
+            {% endfor %}
+            
+        </div>
+    </div>
+{% endblock %}

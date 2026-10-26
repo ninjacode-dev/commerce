@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% block body %}
+<h1>You are currently watching: </h1>
+<div class="container-fluid px-5 my-4">
+
+  <div class="row">
+    {% for item in watchlist %}
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <a href="{% url 'items' item.listing.id %}" class="card listing-card h-100 text-decoration-none {% if item.listing.closed %}disabled{% endif %}">
+          <img src="{% static 'uploads/'|add:item.listing.photo.url %}" alt="{{ item.listing }}" class="listing-photo">
+        <div class="card-body">
+          <h2 class="card-title">{{ item.listing.listing }}</h2>
+          <p class="card-text">{{ item.listing.description }}</p>
+          <p class="card-text font-weight-bold">Price: ${{ item.listing.starting_bid }}</p>
+          <p class="card-text">created {{ item.listing.creation }}</p>
+        </div>
+
+      </a>
+    </div>
+    {% endfor %}
+      </div>
+</div>
+{% endblock %}

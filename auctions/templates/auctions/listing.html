@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <form action="{% url 'newListing' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Add New Listing">
+    </form>
+
+
+{% endblock %}
